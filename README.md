@@ -16,16 +16,22 @@ Dibuat menggunakan **HTML**, **CSS**, dan **Tailwind CSS** dengan tampilan yang 
 ## 📂 Flowchart
 ```mermaid
 flowchart TD
-    A[Start] --> B[Display Contact List]
-    B --> C{User Action}
-    C -->|Add Contact| D[Show Add Contact Form]
-    C -->|Edit Contact| E[Show Edit Contact Form]
-    C -->|Delete Contact| F[Confirm Deletion]
-    D --> G[Save New Contact]
-    E --> H[Update Contact]
-    F --> I[Remove Contact]
-    G --> B
+    A["Mulai"] --> B["Tampilkan Daftar Kontak"]
+    B --> C{"Aksi Pengguna"}
+    C --> J["Selesai"]
+    C --> D["Tambah Kontak"]
+    C --> E["Edit Kontak"]
+    C --> F["Hapus Kontak"]
+
+    D --> G["Tampilkan Form Tambah Kontak"]
+    G --> H["Simpan Kontak Baru"]
     H --> B
-    I --> B
-    B --> J[End]
+
+    E --> I["Tampilkan Form Edit Kontak"]
+    I --> K["Perbarui Kontak"]
+    K --> B
+
+    F --> L["Konfirmasi Hapus Kontak"]
+    L --> M["Hapus Kontak"]
+    M --> B
 ```
