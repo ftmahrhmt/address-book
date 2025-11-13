@@ -10,4 +10,7 @@ Dibuat menggunakan **HTML**, **CSS**, dan **Tailwind CSS** dengan tampilan yang 
 
 ## 🛠️ Teknologi yang Digunakan
 - HTML  
-- Tailwind CSS  
+- CSS 
+- JavaScript
+
+## 📂 Flowchart
