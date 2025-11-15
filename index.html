@@ -3,12 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Address Book</title>
+    <title>Address Book CRUD</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-  <body>
-  <h1 class="text-3xl font-bold mb-6 text-center">Address Book</h1>
 
+  <body class="bg-gray-100 min-h-screen">
 
-  <script src="script.js"></script>
-</body>
+    <!-- HEADER -->
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-6 shadow-md">
+      <h1 class="text-4xl font-bold text-center tracking-wide">Address Book</h1>
+      <p class="text-center text-blue-100 text-sm">CRUD — Tambah • Edit • Simpan • Hapus • Batal</p>
+    </header>
+
+    <main class="p-6 max-w-6xl mx-auto">
+
+      <!-- FORM BOX -->
+      <div id="formContainer" class="bg-white p-6 rounded-2xl shadow-xl mb-8 border border-gray-200">
+        <h2 class="text-2xl font-bold mb-4 text-indigo-700">Form Kontak</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input id="nama" type="text" placeholder="Nama" class="p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400" />
+          <input id="nomor" type="text" placeholder="Nomor Telepon" class="p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400" />
+          <input id="email" type="text" placeholder="Email" class="p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400" />
+          <input id="alamat" type="text" placeholder="Alamat" class="p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400" />
+        </div>
+
+        <div class="flex gap-3 mt-6">
+          <button id="btnTambah" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">Tambah</button>
+          <button id="btnSimpan" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition hidden">Simpan</button>
+          <button id="btnBatal" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition hidden">Batal</button>
+        </div>
+      </div>
+
+      <!-- LIST CONTACTS -->
+      <h2 class="text-2xl font-bold text-gray-700 mb-4">Daftar Kontak</h2>
+
+      <div id="contact-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
