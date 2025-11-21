@@ -1,114 +1,116 @@
 let contacts = [
+    {
+    nama: "Inggar Indraswari",
+    nomor: "0857-2231-8891",
+    email: "Inggarrr@gmail.com",
+    alamat: "Jakarta Selatan"
+  },
+  {
+    nama: "Annisa Naysillah Pramesta Putri",
+    nomor: "0813-5522-9011",
+    email: "icapuyu@gmail.com",
+    alamat: "Bandung, Jawa Barat"
+  },
   {
     nama: "Ananda Faturrahman",
-    nomor: "0812-3344-5566",
-    email: "nandafaturrahman@gmail.com",
-    alamat: "Jl. Kenanga No. 14, Bogor",
-  },
+    nomor: "0822-9988-3321",
+    email: "nandaeman@gmail.com",
+    alamat: "Depok, Jawa Barat"
+  }
 ];
+let indexEdit = -1;
 
-const list = document.getElementById("contact-list");
-const formBox = document.getElementById("formContainer");
+const nama = document.getElementById("nama");
+const nomor = document.getElementById("nomor");
+const email = document.getElementById("email");
+const alamat = document.getElementById("alamat");
 
-let editIndex = null;
+const searchInput = document.getElementById("searchInput");
 
-// RENDER LIST
 function renderContacts() {
+  const list = document.getElementById("contact-list");
   list.innerHTML = "";
-  contacts.forEach((c, i) => {
+
+  const filtered = contacts.filter(c => 
+    c.nama.toLowerCase().includes(searchInput.value.toLowerCase())
+  );
+  
+  filtered.forEach((c, i) => {
     list.innerHTML += `
-      <div class="bg-white p-5 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition">
-        <h2 class="text-xl font-bold text-indigo-600">${c.nama}</h2>
-        <p class="text-gray-700"><strong>Nomor:</strong> ${c.nomor}</p>
-        <p class="text-gray-700"><strong>Email:</strong> ${c.email}</p>
-        <p class="text-gray-700"><strong>Alamat:</strong> ${c.alamat}</p>
+      <div class="bg-white p-5 rounded-xl soft-shadow border">
+        <h3 class="font-bold text-lg text-[#50806B]">${c.nama}</h3>
+        <p class="text-gray-600 text-sm">📞 ${c.nomor}</p>
+        <p class="text-gray-600 text-sm">📧 ${c.email}</p>
+        <p class="text-gray-600 text-sm">📍 ${c.alamat}</p>
 
         <div class="flex gap-2 mt-4">
-          <button class="bg-yellow-500 px-4 py-1.5 rounded-lg text-white hover:bg-yellow-600 transition"
-            onclick="editContact(${i})">Edit</button>
-
-          <button class="bg-red-600 px-4 py-1.5 rounded-lg text-white hover:bg-red-700 transition"
-            onclick="deleteContact(${i})">Hapus</button>
+          <button onclick="editContact(${i})" class="px-4 py-1 bg-[#50806B] text-white rounded-lg hover:bg-[#3a5e50] transition">Edit</button>
+          <button onclick="deleteContact(${i})" class="px-4 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Hapus</button>
         </div>
       </div>
     `;
   });
 }
 
-renderContacts();
+document.getElementById("btnTambah").addEventListener("click", () => {
+  if (!nama.value) return alert("Nama wajib diisi!");
 
-// GET INPUT
-function getInput() {
-  return {
-    nama: document.getElementById("nama").value,
-    nomor: document.getElementById("nomor").value,
-    email: document.getElementById("email").value,
-    alamat: document.getElementById("alamat").value,
-  };
-}
+  contacts.push({
+    nama: nama.value,
+    nomor: nomor.value,
+    email: email.value,
+    alamat: alamat.value
+  });
 
-// CLEAR FORM
-function clearForm() {
-  document.getElementById("nama").value = "";
-  document.getElementById("nomor").value = "";
-  document.getElementById("email").value = "";
-  document.getElementById("alamat").value = "";
-}
-
-// TAMBAH
-document.getElementById("btnTambah").onclick = function () {
-  const data = getInput();
-
-  if (!data.nama || !data.nomor || !data.email || !data.alamat) {
-    alert("Lengkapi semua data!");
-    return;
-  }
-
-  contacts.push(data);
   clearForm();
   renderContacts();
-};
+});
 
-// HAPUS
+function editContact(i) {
+  indexEdit = i;
+
+  nama.value = contacts[i].nama;
+  nomor.value = contacts[i].nomor;
+  email.value = contacts[i].email;
+  alamat.value = contacts[i].alamat;
+
+  toggleButtons(true);
+}
+
+document.getElementById("btnSimpan").addEventListener("click", () => {
+  contacts[indexEdit] = {
+    nama: nama.value,
+    nomor: nomor.value,
+    email: email.value,
+    alamat: alamat.value
+  };
+
+  clearForm();
+  toggleButtons(false);
+  renderContacts();
+});
+
 function deleteContact(i) {
-  if (confirm("Yakin ingin menghapus kontak ini?")) {
+  if (confirm("Yakin mau hapus?")) {
     contacts.splice(i, 1);
     renderContacts();
   }
 }
 
-// EDIT
-function editContact(i) {
-  editIndex = i;
-  const c = contacts[i];
-
-  document.getElementById("nama").value = c.nama;
-  document.getElementById("nomor").value = c.nomor;
-  document.getElementById("email").value = c.email;
-  document.getElementById("alamat").value = c.alamat;
-
-  document.getElementById("btnTambah").classList.add("hidden");
-  document.getElementById("btnSimpan").classList.remove("hidden");
-  document.getElementById("btnBatal").classList.remove("hidden");
+function toggleButtons(edit) {
+  document.getElementById("btnTambah").classList.toggle("hidden", edit);
+  document.getElementById("btnSimpan").classList.toggle("hidden", !edit);
+  document.getElementById("btnBatal").classList.toggle("hidden", !edit);
 }
 
-// SIMPAN
-document.getElementById("btnSimpan").onclick = function () {
-  contacts[editIndex] = getInput();
+document.getElementById("btnBatal").addEventListener("click", () => {
   clearForm();
-  renderContacts();
+  toggleButtons(false);
+});
 
-  // Tombol kembali ke mode tambah
-  document.getElementById("btnTambah").classList.remove("hidden");
-  document.getElementById("btnSimpan").classList.add("hidden");
-  document.getElementById("btnBatal").classList.add("hidden");
-};
+function clearForm() {
+  nama.value = nomor.value = email.value = alamat.value = "";
+}
 
-// BATAL
-document.getElementById("btnBatal").onclick = function () {
-  clearForm();
-
-  document.getElementById("btnTambah").classList.remove("hidden");
-  document.getElementById("btnSimpan").classList.add("hidden");
-  document.getElementById("btnBatal").classList.add("hidden");
-};
+searchInput.addEventListener("input", renderContacts);
+renderContacts();
