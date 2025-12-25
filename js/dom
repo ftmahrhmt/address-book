@@ -1,46 +1,87 @@
-let indexEdit = -1;
-
+const form = document.getElementById("contactForm");
 const nama = document.getElementById("nama");
 const nomor = document.getElementById("nomor");
 const email = document.getElementById("email");
 const alamat = document.getElementById("alamat");
-
 const searchInput = document.getElementById("searchInput");
+
+const btnTambah = document.getElementById("btnTambah");
+const btnSimpan = document.getElementById("btnSimpan");
+const btnBatal = document.getElementById("btnBatal");
+
+let indexEdit = -1;
+
+function validate() {
+  if (!nama.value || !nomor.value || !email.value || !alamat.value) {
+    alert("Semua field wajib diisi!");
+    return false;
+  }
+  return true;
+}
 
 function renderContacts() {
   const list = document.getElementById("contact-list");
   list.innerHTML = "";
 
-  const filtered = contacts.filter(c => 
+  const filtered = contacts.filter(c =>
     c.nama.toLowerCase().includes(searchInput.value.toLowerCase())
   );
-  
-  filtered.forEach((c, i) => {
-    list.innerHTML += `
-      <div class="bg-white p-5 rounded-xl soft-shadow border">
-        <h3 class="font-bold text-lg text-[#50806B]">${c.nama}</h3>
-        <p class="text-gray-600 text-sm">📞 ${c.nomor}</p>
-        <p class="text-gray-600 text-sm">📧 ${c.email}</p>
-        <p class="text-gray-600 text-sm">📍 ${c.alamat}</p>
 
-        <div class="flex gap-2 mt-4">
-          <button onclick="editContact(${i})" class="px-4 py-1 bg-[#50806B] text-white rounded-lg hover:bg-[#3a5e50] transition">Edit</button>
-          <button onclick="deleteContact(${i})" class="px-4 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Hapus</button>
-        </div>
-      </div>
-    `;
+  filtered.forEach((c, i) => {
+    const card = document.createElement("div");
+    card.className = "bg-white p-5 rounded-xl soft-shadow border";
+
+    const title = document.createElement("h3");
+    title.className = "font-bold text-lg text-[#50806B]";
+    title.textContent = c.nama;
+
+    const phone = document.createElement("p");
+    phone.className = "text-gray-600 text-sm";
+    phone.textContent = `📞 ${c.nomor}`;
+
+    const mail = document.createElement("p");
+    mail.className = "text-gray-600 text-sm";
+    mail.textContent = `📧 ${c.email}`;
+
+    const loc = document.createElement("p");
+    loc.className = "text-gray-600 text-sm";
+    loc.textContent = `📍 ${c.alamat}`;
+
+    const btnWrap = document.createElement("div");
+    btnWrap.className = "flex gap-2 mt-4";
+
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.className =
+      "px-4 py-1 bg-[#50806B] text-white rounded-lg hover:bg-[#3a5e50] transition";
+    editBtn.onclick = () => editContact(i);
+
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "Hapus";
+    delBtn.className =
+      "px-4 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition";
+    delBtn.onclick = () => deleteContact(i);
+
+    btnWrap.appendChild(editBtn);
+    btnWrap.appendChild(delBtn);
+
+    card.appendChild(title);
+    card.appendChild(phone);
+    card.appendChild(mail);
+    card.appendChild(loc);
+    card.appendChild(btnWrap);
+
+    list.appendChild(card);
   });
 }
 
-document.getElementById("btnTambah").addEventListener("click", () => {
-  if (!nama.value) return alert("Nama wajib diisi!");
 
-  contacts.push({
-    nama: nama.value,
-    nomor: nomor.value,
-    email: email.value,
-    alamat: alamat.value
-  });
+form.addEventListener("submit", e => e.preventDefault());
+
+btnTambah.addEventListener("click", () => {
+  if (!validate()) return;
+
+  addContact(nama.value, nomor.value, email.value, alamat.value);
 
   clearForm();
   renderContacts();
@@ -57,13 +98,15 @@ function editContact(i) {
   toggleButtons(true);
 }
 
-document.getElementById("btnSimpan").addEventListener("click", () => {
-  contacts[indexEdit] = {
+btnSimpan.addEventListener("click", () => {
+  if (!validate()) return;
+
+  updateContactByIndex(indexEdit, {
     nama: nama.value,
     nomor: nomor.value,
     email: email.value,
     alamat: alamat.value
-  };
+  });
 
   clearForm();
   toggleButtons(false);
@@ -71,26 +114,30 @@ document.getElementById("btnSimpan").addEventListener("click", () => {
 });
 
 function deleteContact(i) {
-  if (confirm("Yakin mau hapus?")) {
-    contacts.splice(i, 1);
+  if (confirm("Yakin ingin menghapus?")) {
+    deleteContactByIndex(i);
     renderContacts();
   }
 }
 
-function toggleButtons(edit) {
-  document.getElementById("btnTambah").classList.toggle("hidden", edit);
-  document.getElementById("btnSimpan").classList.toggle("hidden", !edit);
-  document.getElementById("btnBatal").classList.toggle("hidden", !edit);
+function toggleButtons(editMode) {
+  btnTambah.classList.toggle("hidden", editMode);
+  btnSimpan.classList.toggle("hidden", !editMode);
+  btnBatal.classList.toggle("hidden", !editMode);
 }
 
-document.getElementById("btnBatal").addEventListener("click", () => {
+btnBatal.addEventListener("click", () => {
   clearForm();
   toggleButtons(false);
 });
 
 function clearForm() {
-  nama.value = nomor.value = email.value = alamat.value = "";
+  nama.value = "";
+  nomor.value = "";
+  email.value = "";
+  alamat.value = "";
 }
 
 searchInput.addEventListener("input", renderContacts);
+
 renderContacts();
