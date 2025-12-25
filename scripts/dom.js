@@ -27,54 +27,30 @@ function renderContacts() {
     c.nama.toLowerCase().includes(searchInput.value.toLowerCase())
   );
 
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state col-span-3">Tidak ada data ditemukan...</div>`;
+    return;
+  }
+
   filtered.forEach((c, i) => {
     const card = document.createElement("div");
-    card.className = "bg-white p-5 rounded-xl soft-shadow border";
+    card.className = "bg-white p-5 rounded-2xl soft-shadow border";
 
-    const title = document.createElement("h3");
-    title.className = "font-bold text-lg text-[#50806B]";
-    title.textContent = c.nama;
+    card.innerHTML = `
+      <h3 class="text-xl font-bold text-[#50806B] mb-1">${c.nama}</h3>
+      <p class="text-gray-700 text-sm">📞 ${c.nomor}</p>
+      <p class="text-gray-700 text-sm">📧 ${c.email}</p>
+      <p class="text-gray-700 text-sm mb-3">📍 ${c.alamat}</p>
 
-    const phone = document.createElement("p");
-    phone.className = "text-gray-600 text-sm";
-    phone.textContent = `📞 ${c.nomor}`;
-
-    const mail = document.createElement("p");
-    mail.className = "text-gray-600 text-sm";
-    mail.textContent = `📧 ${c.email}`;
-
-    const loc = document.createElement("p");
-    loc.className = "text-gray-600 text-sm";
-    loc.textContent = `📍 ${c.alamat}`;
-
-    const btnWrap = document.createElement("div");
-    btnWrap.className = "flex gap-2 mt-4";
-
-    const editBtn = document.createElement("button");
-    editBtn.textContent = "Edit";
-    editBtn.className =
-      "px-4 py-1 bg-[#50806B] text-white rounded-lg hover:bg-[#3a5e50] transition";
-    editBtn.onclick = () => editContact(i);
-
-    const delBtn = document.createElement("button");
-    delBtn.textContent = "Hapus";
-    delBtn.className =
-      "px-4 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition";
-    delBtn.onclick = () => deleteContact(i);
-
-    btnWrap.appendChild(editBtn);
-    btnWrap.appendChild(delBtn);
-
-    card.appendChild(title);
-    card.appendChild(phone);
-    card.appendChild(mail);
-    card.appendChild(loc);
-    card.appendChild(btnWrap);
+      <div class="flex justify-between mt-3">
+        <button class="px-4 py-2 rounded-xl bg-[#50806B] text-white hover:bg-[#3a5e50]" onclick="editContact(${i})">Edit</button>
+        <button class="px-4 py-2 rounded-xl bg-red-500 text-white hover:bg-red-700" onclick="deleteContact(${i})">Hapus</button>
+      </div>
+    `;
 
     list.appendChild(card);
   });
 }
-
 
 form.addEventListener("submit", e => e.preventDefault());
 
@@ -140,4 +116,6 @@ function clearForm() {
 
 searchInput.addEventListener("input", renderContacts);
 
-renderContacts();
+document.addEventListener("DOMContentLoaded", () => {
+  renderContacts();
+});
